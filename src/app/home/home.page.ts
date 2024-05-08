@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/angular/standalone';
 import {MovieService} from "../services/movie.service";
 import {InfiniteScrollCustomEvent} from "@ionic/angular";
 import { catchError, finalize } from 'rxjs';
@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, DatePipe, RouterModule],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, DatePipe, RouterModule],
 })
 export class HomePage {
   private movieService = inject(MovieService);
@@ -25,6 +25,10 @@ export class HomePage {
 
   constructor() {
     this.loadMovies()
+  }
+
+  getRoundedRating(num: number) {
+    return parseFloat(num.toFixed(1))
   }
 
   loadMovies(event?: InfiniteScrollCustomEvent) {
@@ -48,7 +52,6 @@ export class HomePage {
       })
     ).subscribe({
       next: (res) => {
-        console.log(res)
         this.movies.push(...res.results);
         if(event) {
           event.target.disabled = res.total_pages === this.currentPage;
@@ -57,5 +60,8 @@ export class HomePage {
     });
   }
 
-  loadMore(event: InfiniteScrollCustomEvent) {}
+  loadMore(event: InfiniteScrollCustomEvent) {
+    this.currentPage++;
+    this.loadMovies(event);
+  }
 }
