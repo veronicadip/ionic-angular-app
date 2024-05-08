@@ -1,22 +1,27 @@
 import {Component, inject} from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel } from '@ionic/angular/standalone';
 import {MovieService} from "../services/movie.service";
 import {InfiniteScrollCustomEvent} from "@ionic/angular";
+import { catchError, finalize } from 'rxjs';
+import { MovieResultI } from '../services/interfaces';
+import { DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, DatePipe, RouterModule],
 })
 export class HomePage {
   private movieService = inject(MovieService);
   private currentPage = 1;
-  private error = null;
-  private isLoading = false;
-  private movies = [];
-  public imageBaseURL = "https://image.tmdb.org/t/p";
+  error = null;
+  isLoading = false;
+  movies: MovieResultI[] = [];
+  imageBaseURL = "https://image.tmdb.org/t/p";
+  dummyArray = new Array(8)
 
   constructor() {
     this.loadMovies()
@@ -29,7 +34,27 @@ export class HomePage {
       this.isLoading = true;
     }
 
-    this.movieService.getTopRatedMovies(this.currentPage).pipe().subscribe();
+    this.movieService.getTopRatedMovies(this.currentPage).pipe(
+      finalize(() => {
+        this.isLoading = false;
+        if(event) {
+          event.target.complete()
+        }
+      }),
+      catchError((err: any) => {
+        console.log(err)
+        this.error = err.error.status_message;
+        return [];
+      })
+    ).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.movies.push(...res.results);
+        if(event) {
+          event.target.disabled = res.total_pages === this.currentPage;
+        }
+      }
+    });
   }
 
   loadMore(event: InfiniteScrollCustomEvent) {}
