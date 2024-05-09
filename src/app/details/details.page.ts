@@ -3,7 +3,7 @@ import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonText, IonLabel, IonButtons, IonBackButton, IonItem } from '@ionic/angular/standalone';
 import { MovieService } from '../services/movie.service';
-import { MovieResultI } from '../services/interfaces';
+import { MovieI } from '../services/interfaces';
 import { cashOutline, calendarOutline } from "ionicons/icons"
 import { addIcons } from 'ionicons';
 
@@ -18,7 +18,7 @@ import { addIcons } from 'ionicons';
 export class DetailsPage {
   private movieService = inject(MovieService);
   imageBaseURL = "https://image.tmdb.org/t/p";
-  movie: WritableSignal<MovieResultI | null> = signal(null);
+  movie: WritableSignal<MovieI | null> = signal(null);
 
   @Input()
   set id(movieID: string){
