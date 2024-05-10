@@ -1,30 +1,51 @@
 import {Component, inject} from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonModal, IonButtons, IonCheckbox, IonButton } from '@ionic/angular/standalone';
 import {MovieService} from "../services/movie.service";
 import {InfiniteScrollCustomEvent} from "@ionic/angular";
 import { catchError, finalize } from 'rxjs';
 import { MovieResultI } from '../services/interfaces';
 import { DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, DatePipe, RouterModule],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonModal, IonButtons, IonCheckbox, IonButton, DatePipe, RouterModule],
 })
 export class HomePage {
   private movieService = inject(MovieService);
+  private authService = inject(AuthService);
   private currentPage = 1;
   error = null;
   isLoading = false;
   movies: MovieResultI[] = [];
   imageBaseURL = "https://image.tmdb.org/t/p";
   dummyArray = new Array(8)
+  openModal = false;
+  dontShowModal = !!sessionStorage.getItem("dontShowLoginModal");
+  isChecked = false;
 
   constructor() {
-    this.loadMovies()
+    this.loadMovies();
+    if(!this.authService.isUserLoggedIn && !this.dontShowModal) {
+      this.setModal(true)
+    }
+  }
+
+  setDontShowModal() {
+    this.isChecked = !this.isChecked
+    if(this.isChecked) {
+      sessionStorage.setItem("dontShowLoginModal", "true");
+    } else {
+      sessionStorage.removeItem("dontShowLoginModal");
+    }
+  }
+
+  setModal(bool: boolean) {
+    this.openModal = bool;
   }
 
   getRoundedRating(num: number) {

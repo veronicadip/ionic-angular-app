@@ -7,6 +7,26 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  @if(openModal) {
+    <ion-modal [isOpen]="openModal">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Log In</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="setModal(false)">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <p>
+            Log in with Facebook
+          </p>
+          <ion-checkbox (click)="setDontShowModal()">Don't show this again.</ion-checkbox>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  }
   @if (isLoading) {
     <ion-list>
       @for (i of dummyArray; track i) {
