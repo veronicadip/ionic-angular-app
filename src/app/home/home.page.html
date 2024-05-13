@@ -12,7 +12,7 @@
       <ng-template>
         <ion-header>
           <ion-toolbar>
-            <ion-title>Log In</ion-title>
+            <ion-title>Welcome!</ion-title>
             <ion-buttons slot="end">
               <ion-button (click)="setModal(false)">Close</ion-button>
             </ion-buttons>
@@ -20,8 +20,18 @@
         </ion-header>
         <ion-content class="ion-padding">
           <p>
-            Log in with Facebook
+            Sign up or log in:
           </p>
+          <div class="login_buttons_container">
+            <ion-button expand="block" (click)="logWithFacebook()">
+              <ion-icon name="logo-facebook" slot="start"></ion-icon>
+              Continue with Facebook
+            </ion-button>
+            <ion-button expand="block" (click)="logWithGoogle()" color="danger">
+              <ion-icon name="logo-google" slot="start"></ion-icon>
+              Continue with Google
+            </ion-button>
+          </div>
           <ion-checkbox (click)="setDontShowModal()">Don't show this again.</ion-checkbox>
         </ion-content>
       </ng-template>

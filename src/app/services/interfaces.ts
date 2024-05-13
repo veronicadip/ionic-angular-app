@@ -73,3 +73,30 @@ export interface SpokenLanguageI {
   iso_639_1:    string;
   name:         string;
 }
+
+export interface User {
+  kind:  string;
+  users: UserElement[];
+}
+
+export interface UserElement {
+  localId:          string;
+  email:            string;
+  displayName:      string;
+  photoUrl:         string;
+  emailVerified:    boolean;
+  providerUserInfo: ProviderUserInfo[];
+  validSince:       string;
+  lastLoginAt:      string;
+  createdAt:        string;
+  lastRefreshAt:    Date;
+}
+
+export interface ProviderUserInfo {
+  providerId:  string;
+  displayName: string;
+  photoUrl:    string;
+  federatedId: string;
+  email:       string;
+  rawId:       string;
+}

@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonModal, IonButtons, IonCheckbox, IonButton } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonModal, IonButtons, IonCheckbox, IonIcon, IonButton } from '@ionic/angular/standalone';
 import {MovieService} from "../services/movie.service";
 import {InfiniteScrollCustomEvent} from "@ionic/angular";
 import { catchError, finalize } from 'rxjs';
@@ -7,13 +7,15 @@ import { MovieResultI } from '../services/interfaces';
 import { DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { logoFacebook, logoGoogle } from "ionicons/icons"
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonModal, IonButtons, IonCheckbox, IonButton, DatePipe, RouterModule],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonModal, IonButtons, IonCheckbox, IonIcon, IonButton, DatePipe, RouterModule],
 })
 export class HomePage {
   private movieService = inject(MovieService);
@@ -29,6 +31,8 @@ export class HomePage {
   isChecked = false;
 
   constructor() {
+    console.log(this.authService.isUserLoggedIn)
+    addIcons({logoFacebook, logoGoogle})
     this.loadMovies();
     if(!this.authService.isUserLoggedIn && !this.dontShowModal) {
       this.setModal(true)
@@ -42,6 +46,14 @@ export class HomePage {
     } else {
       sessionStorage.removeItem("dontShowLoginModal");
     }
+  }
+
+  logWithFacebook() {
+    this.authService.logWithFacebook()
+  }
+
+  logWithGoogle() {
+    this.authService.logWithGoogle()
   }
 
   setModal(bool: boolean) {
