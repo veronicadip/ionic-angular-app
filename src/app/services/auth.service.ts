@@ -44,11 +44,10 @@ export class AuthService {
     });
   }
 
-  // getUser() {
-  //   return this.auth.currentUser
-  // }
+  getUser() {
+    return this.auth.currentUser
+  }
 
   constructor() { 
-    // console.log(this.getUser())
   }
 }

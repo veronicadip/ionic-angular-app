@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { logoFacebook, logoGoogle } from "ionicons/icons"
 import { addIcons } from 'ionicons';
+import {StorageService} from "../services/storage.service"
 
 @Component({
   selector: 'app-home',
@@ -30,13 +31,16 @@ export class HomePage {
   dontShowModal = !!sessionStorage.getItem("dontShowLoginModal");
   isChecked = false;
 
-  constructor() {
-    console.log(this.authService.isUserLoggedIn)
+  constructor(private storageService: StorageService) {
     addIcons({logoFacebook, logoGoogle})
     this.loadMovies();
     if(!this.authService.isUserLoggedIn && !this.dontShowModal) {
       this.setModal(true)
     }
+  }
+
+  async setValue() {
+    await this.storageService.set("example", "hello!")
   }
 
   setDontShowModal() {
