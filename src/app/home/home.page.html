@@ -52,6 +52,9 @@
     <ion-alert header="Error" [message]="error" [buttons]="['Ok']" isOpen="true" />
   } 
   <ion-list>
+    <ion-button (click)="setValue()" expand="block" fill="clear" shape="round">
+      Click me
+    </ion-button>
     @for (movie of movies; track movie) {
       <ion-item button [routerLink]="['/details', movie.id]">
         <ion-avatar slot="start">
